@@ -1,4 +1,6 @@
 <?php
+  include('config/dbConnect.php');
+  
   $email = $title = $ingredients = '';
   $errors = array('email' => '', 'title' => '', 'ingredients' => '');
 
@@ -42,8 +44,22 @@
     }
 
     //Check overall validity
-    if (!array_filter($errors)) {
-      header('Location: index.php');
+    if (array_filter($errors)) {
+      // Echo errors
+    } else {
+      $email = mysqli_real_escape_string($conn, $_POST['email']);
+      $title = mysqli_real_escape_string($conn, $_POST['title']);
+      $ingredients = mysqli_real_escape_string($conn, $_POST['ingredients']);
+
+      $sql = "INSERT INTO pizzas(title,email,ingredients) VALUES('$title', '$email', '$ingredients')";
+      if(mysqli_query($conn, $sql)) {
+        // Success, redirect to home
+        header('Location: index.php');
+      } else {
+        // Error
+        echo 'query error: ' . mysqli_error($conn);
+      }
+
     }
   }
 ?>

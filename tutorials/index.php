@@ -2,11 +2,7 @@
   // MySQLi (improved) - more procedural, used here
   // PDO - PHP data objects
 
-  $conn = mysqli_connect('localhost', 'rayhaan', 'Gorilla8252', 'Pizza');
-  // $conn evaluates true if connection successful
-  if (!$conn) {
-    echo 'Connection error: ' . mysqli_connect_error();
-  }
+  include('config/dbConnect.php');
 
   // Construct query for all pizzas
   // SELECT = get, * = all columns
@@ -30,24 +26,30 @@
   <h4 class="center grey-text">Pizzas</h4>
   <div class="container">
     <div class="row">
-      <?php foreach($pizzas as $pizza) { ?>
+      <!-- Alternate control flow syntax -->
+      <?php foreach($pizzas as $pizza): ?>
 
         <div class="col s6 md3">
           <div class="card z-depth-0">
 
             <div class="card-content center">
               <h6><?php echo htmlspecialchars($pizza['title']); ?></h6>
-              <div><?php echo htmlspecialchars($pizza['ingredients']); ?></div>
+              <ul>
+                <!-- Regular php control flow syntax -->
+                <?php foreach(explode(',', $pizza['ingredients']) as $i) { ?>
+                  <li><?php echo htmlspecialchars($i); ?></li>
+                <?php } ?>
+              </ul>
             </div>
 
             <div class="card-action right-align">
-              <a href="#" class="brand-text">More info</a>
+              <a href="details.php?id=<?php echo $pizza['id']; ?>" class="brand-text">More info</a>
             </div>
                         
           </div>
         </div>
 
-      <?php } ?>
+      <?php endforeach; ?>
     </div>
   </div>
 
