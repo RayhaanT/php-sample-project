@@ -3,29 +3,49 @@
 
   // Check for deletion
   if(isset($_POST['delete'])) {
-    $id_to_delete = mysqli_real_escape_string($conn, $_POST['id_to_delete']);
-    // Construct
-    $sql = "DELETE FROM pizzas WHERE id = $id_to_delete";
-    // Query
-    if(mysqli_query($conn, $sql)) {
+    // $id_to_delete = mysqli_real_escape_string($conn, $_POST['id_to_delete']);
+    // // Construct
+    // $sql = "DELETE FROM pizzas WHERE id = $id_to_delete";
+    // // Query
+    // if(mysqli_query($conn, $sql)) {
+    //   header('Location: index.php');
+    // } else {
+    //   echo 'query error: ' . mysqli_error($conn);
+    // }
+
+    $id_to_delete = $_POST['id_to_delete'];
+    $sql = "DELETE FROM pizzas WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id_to_delete]);
+    if($stmt->errorCode() == 0) {
+      // Success
       header('Location: index.php');
     } else {
-      echo 'query error: ' . mysqli_error($conn);
+      // Error
+      $sqlError = $stmt->errorInfo();
+      print_r($sqlError);
     }
+
   }
 
   // Check id parameter from GET request
   if(isset($_GET['id'])) {
-    $id = mysqli_real_escape_string($conn, $_GET['id']);
-    // Construct
-    $sql = "SELECT * FROM pizzas WHERE id = $id";
-    // Query
-    $result = mysqli_query($conn, $sql);
-    // Fetch
-    $pizza = mysqli_fetch_assoc($result);
+    // $id = mysqli_real_escape_string($conn, $_GET['id']);
+    // // Construct
+    // $sql = "SELECT * FROM pizzas WHERE id = $id";
+    // // Query
+    // $result = mysqli_query($conn, $sql);
+    // // Fetch
+    // $pizza = mysqli_fetch_assoc($result);
 
-    mysqli_free_result($result);
-    mysqli_close($conn);
+    // mysqli_free_result($result);
+    // mysqli_close($conn);
+
+    $id = $_GET['id'];
+    $sql = "SELECT * FROM pizzas WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    $pizza = $stmt->fetch();
   }
 ?>
 

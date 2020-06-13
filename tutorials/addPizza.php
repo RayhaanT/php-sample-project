@@ -47,19 +47,34 @@
     if (array_filter($errors)) {
       // Echo errors
     } else {
-      $email = mysqli_real_escape_string($conn, $_POST['email']);
-      $title = mysqli_real_escape_string($conn, $_POST['title']);
-      $ingredients = mysqli_real_escape_string($conn, $_POST['ingredients']);
+      // $email = mysqli_real_escape_string($conn, $_POST['email']);
+      // $title = mysqli_real_escape_string($conn, $_POST['title']);
+      // $ingredients = mysqli_real_escape_string($conn, $_POST['ingredients']);
 
-      $sql = "INSERT INTO pizzas(title,email,ingredients) VALUES('$title', '$email', '$ingredients')";
-      if(mysqli_query($conn, $sql)) {
-        // Success, redirect to home
+      // $sql = "INSERT INTO pizzas(title,email,ingredients) VALUES('$title', '$email', '$ingredients')";
+      // if(mysqli_query($conn, $sql)) {
+      //   // Success, redirect to home
+      //   header('Location: index.php');
+      // } else {
+      //   // Error
+      //   echo 'query error: ' . mysqli_error($conn);
+      // }
+
+      $sql = "INSERT INTO pizzas(title,email,ingredients) VALUES(:title, :email, :ingredients)";
+      $statement = $pdo->prepare($sql);
+      $statement->execute([
+        'email' => $email,
+        'title' => $title,
+        'ingredients' => $ingredients
+      ]);
+      if($statement->errorCode() == 0) {
+        // Success
         header('Location: index.php');
       } else {
         // Error
-        echo 'query error: ' . mysqli_error($conn);
+        $sqlError = $statement->errorInfo();
+        print_r($sqlError);
       }
-
     }
   }
 ?>

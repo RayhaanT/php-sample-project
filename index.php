@@ -4,8 +4,8 @@
 	} else {
 		$uri = 'http://';
 	}
-	$uri .= $_SERVER['HTTP_HOST'];
-	header('Location: '.$uri.'/tutorials/');
+  $uri .= $_SERVER['HTTP_HOST'];
+	header('Location: '. $uri . "$_SERVER[REQUEST_URI]" . 'tutorials');
 	exit;
 ?>
 Something is wrong with the XAMPP installation :-(

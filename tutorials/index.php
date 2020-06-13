@@ -4,18 +4,25 @@
 
   include('config/dbConnect.php');
 
-  // Construct query for all pizzas
-  // SELECT = get, * = all columns
+  // // Construct query for all pizzas
+  // // SELECT = get, * = all columns
+  // $sql = 'SELECT title, ingredients, id FROM pizzas ORDER BY created_at';
+
+  // // Make the query and get result
+  // $result = mysqli_query($conn, $sql);
+
+  // // Fetch rows as an array
+  // $pizzas = mysqli_fetch_all($result, MYSQLI_ASSOC);
+  // // Free result from memory and close connection
+  // mysqli_free_result($result);
+  // mysqli_close($conn);
+
   $sql = 'SELECT title, ingredients, id FROM pizzas ORDER BY created_at';
+  $statement = $pdo->prepare($sql);
+  $statement->execute();
 
-  // Make the query and get result
-  $result = mysqli_query($conn, $sql);
-
-  // Fetch rows as an array
-  $pizzas = mysqli_fetch_all($result, MYSQLI_ASSOC);
-  // Free result from memory and close connection
-  mysqli_free_result($result);
-  mysqli_close($conn);
+  $pizzas = $statement->fetchAll();
+  $statement->closeCursor();
 
   //print_r($pizzas);
 ?>
